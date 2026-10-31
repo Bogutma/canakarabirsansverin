@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html>
+  
+  <link rel="stylesheet" href="style.css">
+
+
+<head>
+
+  <title>Oh yeah!</title>
+
+</head>
+
+
+<body>
+
+  <div class="bar">
+
+    <h1>Give Can Akar a Sans!</h1>    
+    
+  </div>
+  
+  <img src="myimages/cansans01.png" alt="You're gonna have a Bogutma time." class="img01">
+  
+  <img src="myimages/cansans02.png" alt="Haha." class="img02">
+
+  <img src="myimages/cansans03.png" alt="Hehe." class="img03">
+
+  <img src="myimages/cansans04.png" alt="Hoho." class="img04">
+
+  <p>Give me a Sans and contact me at dasisteinecan05@gmail.com</p>
+
+</body>
+
+<audio id="bgMusic" loop>
+  <source src="myaudio/jaycolata.wav" type="audio/mpeg">
+</audio>
+
+<button id="musicBtn" aria-label="Toggle music">🔊</button>
+
+<style>
+  #musicBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 9999;
+  }
+  #musicBtn:hover {
+    background: rgba(0, 0, 0, 0.9);
+  }
+</style>
+
+<script>
+  const music = document.getElementById("bgMusic");
+  const btn = document.getElementById("musicBtn");
+  music.volume = 0.4;
+
+  // Did the visitor mute it before? (remembered across pages/visits)
+  let muted = localStorage.getItem("musicMuted") === "true";
+  let started = false;
+
+  function updateButton() {
+    btn.textContent = muted ? "🔇" : "🔊";
+  }
+
+  function startMusic() {
+    if (started || muted) return;
+    music.play().then(() => { started = true; }).catch(() => {});
+    removeListeners();
+  }
+
+  function removeListeners() {
+    ["click", "keydown", "touchstart"].forEach(e =>
+      document.removeEventListener(e, startMusic)
+    );
+  }
+
+  // Start on first interaction (unless they muted it earlier)
+  ["click", "keydown", "touchstart"].forEach(e =>
+    document.addEventListener(e, startMusic)
+  );
+
+  // The mute/unmute button
+  btn.addEventListener("click", (event) => {
+    event.stopPropagation(); // don't trigger startMusic twice
+    muted = !muted;
+    localStorage.setItem("musicMuted", muted);
+
+    if (muted) {
+      music.pause();
+    } else {
+      music.play();
+      started = true;
+      removeListeners();
+    }
+    updateButton();
+  });
+
+  updateButton();
+</script>
+
+</html>
